@@ -23,8 +23,8 @@ jobs:
             curl -sSL https://github.com/SICZ/Mk/archive/master.tar.gz | tar -xzf -
             mv Mk-master Mk
       - run:
-          name: sicz/elasticsearch:2.4.1
-          working_directory: 2.4.1
+          name: sicz/elasticsearch:2.4.5
+          working_directory: 2.4.5
           command: |
             make ci
       - run:
