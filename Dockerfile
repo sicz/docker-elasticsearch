@@ -19,6 +19,8 @@ LABEL \
   org.label-schema.vcs-ref="${VCS_REF}" \
   org.label-schema.build-date="${BUILD_DATE}"
 
+ENV ELASTIC_CONTAINER=true
+
 ARG ELASTICSEARCH_VERSION
 ENV ELASTICSEARCH_HOME=/usr/share/elasticsearch
 ARG ELASTICSEARCH_TARBALL=elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz
