@@ -17,15 +17,19 @@ DOCKER_IMAGE_TAG	?= $(ELASTICSEARCH_VERSION)
 # Docker image build variables
 BUILD_VARS		+= ELASTICSEARCH_VERSION
 
-### DOCKER_EXECUTOR ############################################################
+### EXECUTOR ###################################################################
 
 # Use the Docker Compose executor
 DOCKER_EXECUTOR		?= compose
 
 # Variables used in the Docker Compose file
-COMPOSE_VARS		+= SERVER_CRT_HOST \
+COMPOSE_VARS		+= ES_DISCOVERY_TYPE \
+			   SERVER_CRT_HOST \
 			   SERVICE_NAME \
 			   SIMPLE_CA_IMAGE
+
+# Disable Elasticsearch bootstrap checks
+ES_DISCOVERY_TYPE	?= single-node
 
 # Use the same service name for all configurations
 SERVICE_NAME		?= container
@@ -72,7 +76,8 @@ MAKE_VARS		?= GITHUB_MAKE_VARS \
 
 
 define CONFIG_MAKE_VARS
-ELASTICSEARCH_VERSION:	$(LOGSTAH_VERSION)
+ELASTICSEARCH_VERSION:	$(ELASTICSEARCH_VERSION)
+ES_DISCOVERY_TYPE:	$(ES_DISCOVERY_TYPE)
 
 SIMPLE_CA_IMAGE_NAME:	$(SIMPLE_CA_IMAGE_NAME)
 SIMPLE_CA_IMAGE_TAG:	$(SIMPLE_CA_IMAGE_TAG)

@@ -8,6 +8,11 @@ DOCKER_IMAGE_TAGS	?= 2.4 2
 
 VARIANT_DIR		?= $(CURDIR)
 
+### EXECUTOR ###################################################################
+
+# Elasticsearch 2 does not have bootstrap checks
+ES_DISCOVERY_TYPE	?=
+
 ### MK_DOCKER_IMAGE ############################################################
 
 PROJECT_DIR		?= $(abspath ..)
