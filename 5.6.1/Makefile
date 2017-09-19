@@ -1,6 +1,6 @@
 ### DOCKER_IMAGE ###############################################################
 
-ELASTICSEARCH_VERSION	?= 5.6.0
+ELASTICSEARCH_VERSION	?= 5.6.1
 
 DOCKER_IMAGE_TAGS	?= 5.6 5 latest
 
