@@ -25,14 +25,10 @@ DOCKER_EXECUTOR		?= compose
 # Variables used in the Docker Compose file
 COMPOSE_VARS		+= ES_DISCOVERY_TYPE \
 			   SERVER_CRT_HOST \
-			   SERVICE_NAME \
 			   SIMPLE_CA_IMAGE
 
 # Disable Elasticsearch bootstrap checks
 ES_DISCOVERY_TYPE	?= single-node
-
-# Use the same service name for all configurations
-SERVICE_NAME		?= container
 
 # Certificate subject aletrnative names
 SERVER_CRT_HOST		+= $(SERVICE_NAME).local
