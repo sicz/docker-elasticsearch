@@ -47,7 +47,7 @@ RUN set -exo pipefail; \
   chown -R root:root .; \
   mv config/elasticsearch.yml config/elasticsearch.default.yml
 
-COPY config /
+COPY rootfs /
 
 EXPOSE \
   9200/tcp \

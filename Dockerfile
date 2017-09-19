@@ -50,7 +50,7 @@ RUN set -exo pipefail; \
   mv config/elasticsearch.yml config/elasticsearch.default.yml; \
   mv config/log4j2.properties config/log4j2.default.properties
 
-COPY config /
+COPY rootfs /
 
 EXPOSE \
   9200/tcp \
