@@ -20,15 +20,18 @@ LABEL \
   org.label-schema.build-date="${BUILD_DATE}"
 
 ARG ELASTICSEARCH_VERSION
-ENV ELASTICSEARCH_HOME=/usr/share/elasticsearch
+ARG ELASTICSEARCH_HOME=/usr/share/elasticsearch
 ARG ELASTICSEARCH_TARBALL=elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz
 ARG ELASTICSEARCH_TARBALL_URL=https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${ELASTICSEARCH_VERSION}/${ELASTICSEARCH_TARBALL}
 ARG ELASTICSEARCH_TARBALL_SHA1_URL=${ELASTICSEARCH_TARBALL_URL}.sha1
 
 ENV \
-  DOCKER_USER=elasticsearch \
-  DOCKER_COMMAND=elasticsearch \
-  PATH=${ELASTICSEARCH_HOME}/bin:${PATH}
+  DOCKER_USER="elasticsearch" \
+  DOCKER_COMMAND="elasticsearch" \
+  ELASTIC_CONTAINER="true" \
+  ELASTICSEARCH_HOME="${ELASTICSEARCH_HOME}" \
+  ELASTICSEARCH_VERSION="${ELASTICSEARCH_VERSION}" \
+  PATH="${ELASTICSEARCH_HOME}/bin:${PATH}"
 
 WORKDIR ${ELASTICSEARCH_HOME}
 
@@ -42,7 +45,6 @@ RUN set -exo pipefail; \
   rm -f /tmp/${ELASTICSEARCH_TARBALL}; \
   mkdir -p config/scripts data logs plugins; \
   chown -R root:root .; \
-  # rm -f config/elasticsearch.keystore; \
   mv config/elasticsearch.yml config/elasticsearch.default.yml
 
 COPY config /
