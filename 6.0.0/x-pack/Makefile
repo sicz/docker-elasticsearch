@@ -1,23 +1,31 @@
+### BASE_IMAGE #################################################################
+
+BASE_IMAGE_NAME		?= $(DOCKER_IMAGE_NAME)
+BASE_IMAGE_TAG		?= $(ELASTICSEARCH_TAG)
+
 ### DOCKER_IMAGE ###############################################################
 
-ELASTICSEARCH_VERSION	?= 2.4.5
+DOCKER_IMAGE_TAG	?= $(BASE_IMAGE_TAG)-x-pack
 
 ### BUILD ######################################################################
 
-VARIANT_DIR		?= $(CURDIR)
+VARIANT_DIR		?= $(PROJECT_DIR)/x-pack
 
 ### EXECUTOR ###################################################################
 
-DOCKER_CONFIG		?= elasticsearch-2
+DOCKER_CONFIG		?= x-pack
+
+# Elasticsearch HTTP endpoint
+ELASTICSEARCH_URL	?= https://elasticsearch.local:9200
 
 ### TEST #######################################################################
 
-# Skip Elasticsearch X-Pack tests
-SPEC_OPTS		?= --tag ~x_pack
+# Do all tests
+SPEC_OPTS		?=
 
 ### MK_DOCKER_IMAGE ############################################################
 
-PROJECT_DIR		?= $(abspath ..)
-include $(PROJECT_DIR)/docker.version.mk
+PROJECT_DIR		?= $(abspath ../..)
+include ../Makefile
 
 ################################################################################

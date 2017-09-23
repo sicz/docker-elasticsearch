@@ -1,0 +1,11 @@
+###
+### Elastic 2.x configuration
+###
+
+version: "3.3"
+
+services:
+  elasticsearch:
+    environment:
+      # Elasticsearch 2 does not have bootstrap checks
+      - discovery.type=

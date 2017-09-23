@@ -1,8 +1,12 @@
 ### DOCKER_IMAGE ###############################################################
 
 ELASTICSEARCH_VERSION	?= 6.0.0-beta2
+ELASTICSEARCH_TAG	?= $(subst -beta2,,$(ELASTICSEARCH_VERSION))
 
-DOCKER_IMAGE_TAG	?= $(shell echo $(ELASTICSEARCH_VERSION) | sed -E "s/-.*//")
+### TEST #######################################################################
+
+# Skip Elasticsearch X-Pack tests
+SPEC_OPTS		?= --tag ~x_pack
 
 ### MK_DOCKER_IMAGE ############################################################
 

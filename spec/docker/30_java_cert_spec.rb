@@ -2,7 +2,7 @@ require "docker_helper"
 
 ### JAVA_CERTIFICATE #########################################################
 
-describe "Java certificate", :test => :java_cert do
+describe "Java certificate", :test => :java_cert, :x_pack => true do
   # Default Serverspec backend
   before(:each) { set :backend, :docker }
 
@@ -15,13 +15,13 @@ describe "Java certificate", :test => :java_cert do
   truststore_pwd    = "/usr/share/elasticsearch/config/truststore.pwd"
   truststore_user   = "elasticsearch"
   truststore_group  = "elasticsearch"
-  truststore_mode   = 440
+  truststore_mode   = 640
 
   keystore          = "/usr/share/elasticsearch/config/keystore.jks"
   keystore_pwd      = "/usr/share/elasticsearch/config/keystore.pwd"
   keystore_user     = "elasticsearch"
   keystore_group    = "elasticsearch"
-  keystore_mode     = 440
+  keystore_mode     = 640
 
   ### TRUSTSTORE_PASSPHRASE ####################################################
 

@@ -12,11 +12,11 @@ fi
 ### ES_PATH ####################################################################
 
 # Path to settings directory
-: ${ES_SETTINGS_DIR:=${ELASTICSEARCH_HOME}/config}
+: ${ES_PATH_CONF:=${ES_HOME}/config}
 
-# Path do data and log directories
-: ${ES_PATH_DATA:=${ELASTICSEARCH_HOME}/data}
-: ${ES_PATH_LOGS:=${ELASTICSEARCH_HOME}/logs}
+# Path to data and log directories
+: ${ES_PATH_DATA:=${ES_HOME}/data}
+: ${ES_PATH_LOGS:=${ES_HOME}/logs}
 # Swarm service in replicated mode might use one volume for multiple nodes
 if [ -n "${DOCKER_HOST_NAME}" ]; then
   ES_PATH_DATA=${ES_PATH_DATA}/${DOCKER_CONTAINER_NAME}
@@ -26,20 +26,17 @@ fi
 ### LOG4J2_PROPERTIES ##########################################################
 
 # Default Log4j2 properties file name
-: ${LOG4J2_PROPERTIES_FILES:=log4j2.docker.properties}
+: ${LOG4J2_PROPERTIES_FILES:=log4j2.default.properties}
+
+### JVM_OPTIONS ################################################################
+
+# Default Java options
+: ${ES_JVM_OPTIONS_FILES:=jvm.default.options}
 
 ### JAVA_KEYSTORE ##############################################################
 
 # Default truststore and keystore directories
-SERVER_CRT_DIR=${ES_SETTINGS_DIR}
-SERVER_KEY_DIR=${ES_SETTINGS_DIR}
-
-### XPACK_CONFIG ###############################################################
-
-# By default, X-Pack capabilities are disabled
-: ${XPACK_ML_ENABLED:=false}            # From Elasticsearch 5.5.0
-: ${XPACK_MONITORING_ENABLED:=false}    # From Elasticsearch 5.0.0
-: ${XPACK_SECURITY_ENABLED:=false}      # From Elasticsearch 5.0.0
-: ${XPACK_WATCHER_ENABLED:=false}       # From Elasticsearch 5.0.0
+SERVER_CRT_DIR=${ES_PATH_CONF}
+SERVER_KEY_DIR=${ES_PATH_CONF}
 
 ################################################################################

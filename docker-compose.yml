@@ -10,39 +10,16 @@ networks:
 services:
   elasticsearch:
     image: ${DOCKER_IMAGE}
-    depends_on:
-      - simple_ca
     environment:
       - DOCKER_ENTRYPOINT_DEBUG=true
       - DOCKER_ENTRYPOINT_INFO=true
-      - ES_DISCOVERY_TYPE=${ES_DISCOVERY_TYPE}
-      - JAVA_TRUSTSTORE_PWD_FILE=/usr/share/elasticsearch/config/truststore.pwd
-      - JAVA_KEYSTORE_PWD_FILE=/usr/share/elasticsearch/config/keystore.pwd
-      - SERVER_CRT_HOST=${SERVER_CRT_HOST}
-      - SIMPLE_CA_URL=https://simple-ca.local
-      - XPACK_MONITORING_ENABLED=true
+      - discovery.type=single-node
     networks:
       default:
         aliases:
           - elasticsearch.local
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - simple_ca_secrets:/run/secrets:ro
-
-  simple_ca:
-    image: ${SIMPLE_CA_IMAGE}
-    environment:
-      - DOCKER_ENTRYPOINT_DEBUG=true
-      - DOCKER_ENTRYPOINT_INFO=true
-      - SERVER_CRT_HOST=simple-ca.local
-    networks:
-      default:
-        aliases:
-          - simple-ca.local
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - simple_ca_data:/var/lib/simple-ca
-      - simple_ca_secrets:/var/lib/simple-ca/secrets
 
   test:
     image: ${TEST_IMAGE}
@@ -56,10 +33,8 @@ services:
       - DOCKER_ENTRYPOINT_INFO=true
       # Wait until the tested container is started
       - WAIT_FOR_TCP=elasticsearch.local:9200
-      - WAIT_FOR_TIMEOUT=120
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - simple_ca_secrets:/run/secrets:ro
       # Use project dir as host volume for debugging tests if Docker host is local
       - ${TEST_PROJECT_DIR:-test_project_dir}:${PROJECT_DIR}
     working_dir: ${TEST_DIR}
@@ -73,12 +48,8 @@ services:
       - DOCKER_ENTRYPOINT_INFO=true
       # Wait until the tested container is started
       - WAIT_FOR_TCP=elasticsearch.local:9200
-      - WAIT_FOR_TIMEOUT=120
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - simple_ca_secrets:/run/secrets:ro
 
 volumes:
   test_project_dir:
-  simple_ca_data:
-  simple_ca_secrets:

@@ -15,7 +15,9 @@ SHELL			+= -e
 # Docker image versions
 DOCKER_VERSIONS		?= 2.4.5 \
 			   5.6.1 \
-			   6.0.0
+			   5.6.1/x-pack \
+			   6.0.0 \
+			   6.0.0/x-pack \
 
 # Make targets propagated to all Docker image versions
 DOCKER_VERSION_TARGETS	+= build \

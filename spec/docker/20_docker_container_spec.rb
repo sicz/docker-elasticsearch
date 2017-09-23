@@ -14,38 +14,11 @@ describe "Docker container", :test => :docker_container do
     it { is_expected.to be_running }
   end
 
-  ### FILES ####################################################################
-
-  describe "Files" do
-    [
-      # [file,                                                mode, user,           group,      [expectations]]
-      ["/usr/share/elasticsearch/config/elasticsearch.yml",   640, "elasticsearch", "elasticsearch", [:be_file]],
-      ["/usr/share/elasticsearch/config/log4j2.properties",   640, "elasticsearch", "elasticsearch", [:be_file]],
-    ].each do |file, mode, user, group, expectations|
-      expectations ||= []
-      context file(file) do
-        it { is_expected.to exist }
-        it { is_expected.to be_file }       if expectations.include?(:be_file)
-        it { is_expected.to be_directory }  if expectations.include?(:be_directory)
-        it { is_expected.to be_mode(mode) } unless mode.nil?
-        it { is_expected.to be_owned_by(user) } unless user.nil?
-        it { is_expected.to be_grouped_into(group) } unless group.nil?
-        its(:sha256sum) do
-          is_expected.to eq(
-              Digest::SHA256.file("config/#{subject.name}").to_s
-          )
-        end if expectations.include?(:eq_sha256sum)
-      end
-    end
-  end
-
-  ### PROCESSES ################################################################
-
   describe "Processes" do
     [
       # [process,                   user,             group,            pid]
       ["tini",                      "root",           "root",           1],
-      ["java",                      "elasticsearch",       "elasticsearch"],
+      ["java",                      "elasticsearch",  "elasticsearch"],
     ].each do |process, user, group, pid|
       context process(process) do
         it { is_expected.to be_running }
@@ -71,45 +44,38 @@ describe "Docker container", :test => :docker_container do
     end
   end
 
-  ### ELASTICSEARCH ############################################################
+  ### URLS #####################################################################
 
-  # TODO: Elastcisearch monitoring API
-  # https://www.elastic.co/guide/en/elasticsearch/current/monitoring-elasticsearch.html#monitoring
-
-  # describe "URLs" do
-  #   # Execute Serverspec command locally
-  #   before(:each)  { set :backend, :exec }
-  #   [
-  #     # [url, stdout, stderr]
-  #     [ "http://#{ENV["SERVER_CRT_HOST"]}",
-  #       "^#{IO.binread("spec/fixtures/www/index.html")}$",
-  #       "\\r\\n< HTTP/1.1 301 Moved Permanently\\r\\n< Location: https://#{ENV["SERVER_CRT_HOST"]}/\\r\\n",
-  #     ],
-  #     [ "http://#{ENV["SERVER_CRT_HOST"]}/index.html",
-  #       "^#{IO.binread("spec/fixtures/www/index.html")}$",
-  #       "\\r\\n< HTTP/1.1 301 Moved Permanently\\r\\n< Location: https://#{ENV["SERVER_CRT_HOST"]}/index.html\\r\\n",
-  #     ],
-  #     [ "https://#{ENV["SERVER_CRT_HOST"]}",
-  #       "^#{IO.binread("spec/fixtures/www/index.html")}$",
-  #     ],
-  #     [ "https://#{ENV["SERVER_CRT_HOST"]}/index.html",
-  #       "^#{IO.binread("spec/fixtures/www/index.html")}$",
-  #     ],
-  #   ].each do |url, stdout, stderr|
-  #     context url do
-  #       subject { command("curl --location --silent --show-error --verbose #{url}") }
-  #       it "should exist" do
-  #         expect(subject.exit_status).to eq(0)
-  #       end
-  #       it "should match \"#{stdout.gsub(/\n/, "\\n")}\"" do
-  #         expect(subject.stdout).to match(stdout)
-  #       end unless stdout.nil?
-  #       it "should match \"#{stderr}\"" do
-  #         expect(subject.stderr).to match(stderr)
-  #       end unless stderr.nil?
-  #     end
-  #   end
-  # end
+  describe "Elasticsearch endpoint" do
+    # Execute Serverspec command locally
+    before(:each)  { set :backend, :exec }
+    [
+      # [url, stdout, stderr, user, passwd]
+      [ "#{ENV["ELASTICSEARCH_URL"]}",
+        "\"number\" : \"#{ENV["ELASTICSEARCH_VERSION"]}\"",
+        "^< Content-Type: application\\/json; charset=UTF-8\\r$",
+        "elastic", "changeme",
+      ],
+      [ "#{ENV["ELASTICSEARCH_URL"]}/_cluster/health",
+        "\"status\":\"(green|yellow)\"",
+        "^< Content-Type: application\\/json; charset=UTF-8\\r$",
+        "elastic", "changeme",
+      ],
+    ].each do |url, stdout, stderr, user, passwd|
+      context url do
+        subject { command("curl --location --silent --show-error --verbose --user #{user}:#{passwd} #{url}") }
+        it "should exist" do
+          expect(subject.exit_status).to eq(0)
+        end
+        it "should match /#{stdout}/" do
+          expect(subject.stdout).to match(/#{stdout}/i)
+        end unless stdout.nil?
+        it "should match /#{stderr}/" do
+          expect(subject.stderr).to match(/#{stderr}/i)
+        end unless stderr.nil?
+      end
+    end
+  end
 
   ##############################################################################
 

@@ -112,19 +112,112 @@ describe "Docker image", :test => :docker_image do
   ### FILES ####################################################################
 
   describe "Files" do
-    [
-      # [file,                                            mode, user,       group,      [expectations]]
-      ["/docker-entrypoint.sh",                           755, "root",      "root",     [:be_file]],
-      ["/docker-entrypoint.d/30-environment-elasticsearch.sh", 644, "root",      "root",     [:be_file, :eq_sha256sum]],
-      ["/docker-entrypoint.d/60-elasticsearch-settings.sh",    644, "root",      "root",     [:be_file, :eq_sha256sum]],
-      ["/usr/share/elasticsearch",                             755, "root",      "root",     [:be_directory]],
-      ["/usr/share/elasticsearch/bin",                         755, "root",      "root",     [:be_directory]],
-      ["/usr/share/elasticsearch/config",                      750, "elasticsearch",  "elasticsearch", [:be_directory]],
-      ["/usr/share/elasticsearch/data",                        750, "elasticsearch",  "elasticsearch", [:be_directory]],
-      ["/usr/share/elasticsearch/logs",                        750, "elasticsearch",  "elasticsearch", [:be_directory]],
-      ["/usr/share/elasticsearch/plugins",                     755, "root",           "root",          [:be_directory]],
-    ].each do |file, mode, user, group, expectations|
+
+    ### ELASTICSEARCH ##########################################################
+
+    files = [
+      # [file, mode, user, group, [expectations], rootfs, srcfile, sha256sum]
+      [
+        "/docker-entrypoint.sh",
+        755, "root", "root", [:be_file],
+      ],
+      [
+        "/docker-entrypoint.d/30-elasticsearch-environment.sh",
+        644, "root", "root", [:be_file, :eq_sha256sum],
+      ],
+      [
+        "/docker-entrypoint.d/70-elasticsearch-settings.sh",
+        644, "root", "root", [:be_file, :eq_sha256sum],
+      ],
+      [
+        "/usr/share/elasticsearch",
+        755, "root", "root", [:be_directory],
+      ],
+      [
+        "/usr/share/elasticsearch/bin",
+        755, "root", "root", [:be_directory],
+      ],
+      [
+        "/usr/share/elasticsearch/config",
+        750, "elasticsearch", "elasticsearch", [:be_directory],
+      ],
+      [
+        "/usr/share/elasticsearch/config/elasticsearch.yml",
+        640, "elasticsearch", "elasticsearch", [:be_file],
+      ],
+      [
+        "/usr/share/elasticsearch/data",
+        750, "elasticsearch", "elasticsearch", [:be_directory],
+      ],
+      [
+        "/usr/share/elasticsearch/logs",
+        750, "elasticsearch", "elasticsearch", [:be_directory],
+      ],
+      [
+        "/usr/share/elasticsearch/plugins",
+        755, "root", "root", [:be_directory],
+      ],
+    ]
+
+    if "#{ENV["ELASTICSEARCH_VERSION"]}".start_with?("2.") then
+      files += [
+        [
+          "/docker-entrypoint.d/31-elasticsearch-environment.sh",
+          644, "root", "root", [:be_file, :eq_sha256sum],
+          "#{ENV["ELASTICSEARCH_VERSION"]}/rootfs",
+        ],
+        [
+          "/docker-entrypoint.d/61-logging-settings.sh",
+          644, "root", "root", [:be_file, :eq_sha256sum],
+          "#{ENV["ELASTICSEARCH_VERSION"]}/rootfs",
+        ],
+        [
+          "/usr/share/elasticsearch/config/logging.default.yml",
+          640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+          "#{ENV["ELASTICSEARCH_VERSION"]}/rootfs",
+        ],
+        [
+          "/usr/share/elasticsearch/config/logging.yml",
+          640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+          "#{ENV["ELASTICSEARCH_VERSION"]}/rootfs",
+          nil,
+          Digest::SHA256.hexdigest(
+            "# logging.default.yml\n" +
+            IO.binread("#{ENV["ELASTICSEARCH_VERSION"]}/rootfs/usr/share/elasticsearch/config/logging.default.yml")
+          ),
+        ],
+      ]
+    else
+      files += [
+        [
+          "/usr/share/elasticsearch/config/log4j2.default.properties",
+          640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+        ],
+        [
+          "/usr/share/elasticsearch/config/log4j2.properties",
+          640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+          nil, nil,
+          Digest::SHA256.hexdigest(
+            "# log4j2.default.properties\n" +
+            IO.binread("rootfs/usr/share/elasticsearch/config/log4j2.default.properties")
+          ),
+        ],
+        [
+          "/usr/share/elasticsearch/config/jvm.default.options",
+          640, "elasticsearch", "elasticsearch", [:be_file],
+        ],
+        [
+          "/usr/share/elasticsearch/config/jvm.options",
+          640, "elasticsearch", "elasticsearch", [:be_file],
+        ],
+      ]
+    end
+
+    files.each do |file, mode, user, group, expectations, rootfs, srcfile, sha256sum|
       expectations ||= []
+      rootfs = "rootfs" if rootfs.nil?
+      srcfile = file if srcfile.nil?
+      sha256sum = Digest::SHA256.file("#{rootfs}/#{srcfile}").to_s if expectations.include?(:eq_sha256sum) && sha256sum.nil?
       context file(file) do
         it { is_expected.to exist }
         it { is_expected.to be_file }       if expectations.include?(:be_file)
@@ -132,11 +225,60 @@ describe "Docker image", :test => :docker_image do
         it { is_expected.to be_mode(mode) } unless mode.nil?
         it { is_expected.to be_owned_by(user) } unless user.nil?
         it { is_expected.to be_grouped_into(group) } unless group.nil?
-        its(:sha256sum) do
-          is_expected.to eq(
-              Digest::SHA256.file("rootfs/#{subject.name}").to_s
-          )
-        end if expectations.include?(:eq_sha256sum)
+        its(:sha256sum) { is_expected.to eq(sha256sum) } if expectations.include?(:eq_sha256sum)
+      end
+    end
+
+    ### XPACK ##################################################################
+
+    [
+      # [file, mode, user, group, [expectations], rootfs, srcfile, sha256sum]
+      [
+        "/docker-entrypoint.d/32-x-pack-environment.sh",
+        644, "root", "root", [:be_file, :eq_sha256sum],
+        "x-pack/rootfs",
+      ],
+      [
+        "/docker-entrypoint.d/62-x-pack-settings.sh",
+        644, "root", "root", [:be_file, :eq_sha256sum],
+        "x-pack/rootfs",
+      ],
+      [
+        "/usr/share/elasticsearch/config/elasticsearch.default_tls_settings.yml",
+        640, "elasticsearch", "elasticsearch", [:be_file],
+        "x-pack/rootfs",
+      ],
+      [
+        "/usr/share/elasticsearch/config/x-pack/log4j2.default.properties",
+        640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+        "x-pack/rootfs",
+      ],
+      [
+        "/usr/share/elasticsearch/config/x-pack/log4j2.properties",
+        640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+        nil, nil,
+        Digest::SHA256.hexdigest(
+          "# log4j2.default.properties\n" +
+          IO.binread("x-pack/rootfs/usr/share/elasticsearch/config/x-pack/log4j2.default.properties")
+        ),
+      ],
+      [
+        "/usr/share/elasticsearch/plugins/x-pack/x-pack-#{ENV["ELASTICSEARCH_VERSION"]}.jar",
+        644, "root", "root", [:be_file],
+      ],
+    ].each do |file, mode, user, group, expectations, rootfs, srcfile, sha256sum|
+      expectations ||= []
+      rootfs = "rootfs" if rootfs.nil?
+      srcfile = file if srcfile.nil?
+      sha256sum = Digest::SHA256.file("#{rootfs}/#{srcfile}").to_s if expectations.include?(:eq_sha256sum) && sha256sum.nil?
+      context file(file), :x_pack => true do
+        it { is_expected.to exist }
+        it { is_expected.to be_file }       if expectations.include?(:be_file)
+        it { is_expected.to be_directory }  if expectations.include?(:be_directory)
+        it { is_expected.to be_mode(mode) } unless mode.nil?
+        it { is_expected.to be_owned_by(user) } unless user.nil?
+        it { is_expected.to be_grouped_into(group) } unless group.nil?
+        its(:sha256sum) { is_expected.to eq(sha256sum) } if expectations.include?(:eq_sha256sum)
       end
     end
   end

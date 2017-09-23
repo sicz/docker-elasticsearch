@@ -4,6 +4,11 @@ ELASTICSEARCH_VERSION	?= 5.6.1
 
 DOCKER_IMAGE_TAGS	?= latest
 
+### TEST #######################################################################
+
+# Skip Elasticsearch X-Pack tests
+SPEC_OPTS		?= --tag ~x_pack
+
 ### MK_DOCKER_IMAGE ############################################################
 
 PROJECT_DIR		?= $(abspath ..)

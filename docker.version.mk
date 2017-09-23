@@ -5,12 +5,14 @@ BASE_IMAGE_TAG		?= 8u141-jre-centos
 
 ### DOCKER_IMAGE ###############################################################
 
+ELASTICSEARCH_TAG	?= $(ELASTICSEARCH_VERSION)
+
 DOCKER_PROJECT		?= sicz
 DOCKER_PROJECT_DESC	?= A NoSQL database and search engine
 DOCKER_PROJECT_URL	?= https://www.elastic.co/products/elasticsearch
 
 DOCKER_NAME		?= elasticsearch
-DOCKER_IMAGE_TAG	?= $(ELASTICSEARCH_VERSION)
+DOCKER_IMAGE_TAG	?= $(ELASTICSEARCH_TAG)
 
 ### BUILD ######################################################################
 
@@ -23,15 +25,15 @@ BUILD_VARS		+= ELASTICSEARCH_VERSION
 DOCKER_EXECUTOR		?= compose
 
 # Variables used in the Docker Compose file
-COMPOSE_VARS		+= ES_DISCOVERY_TYPE \
+COMPOSE_VARS		+= ELASTICSEARCH_URL \
 			   SERVER_CRT_HOST \
 			   SIMPLE_CA_IMAGE
 
-# Disable Elasticsearch bootstrap checks
-ES_DISCOVERY_TYPE	?= single-node
-
 # Certificate subject aletrnative names
 SERVER_CRT_HOST		+= $(SERVICE_NAME).local
+
+# Elasticsearch HTTP endpoint
+ELASTICSEARCH_URL	?= http://elasticsearch.local:9200
 
 ### SIMPLE_CA ##################################################################
 
@@ -74,7 +76,7 @@ MAKE_VARS		?= GITHUB_MAKE_VARS \
 
 define CONFIG_MAKE_VARS
 ELASTICSEARCH_VERSION:	$(ELASTICSEARCH_VERSION)
-ES_DISCOVERY_TYPE:	$(ES_DISCOVERY_TYPE)
+ELASTICSEARCH_TAG:	$(ELASTICSEARCH_TAG)
 
 SIMPLE_CA_IMAGE_NAME:	$(SIMPLE_CA_IMAGE_NAME)
 SIMPLE_CA_IMAGE_TAG:	$(SIMPLE_CA_IMAGE_TAG)
@@ -92,7 +94,7 @@ all: clean build start wait logs test
 
 # Build a new image and run the tests
 .PHONY: ci
-ci: build clean start wait logs test
+ci: all
 	@$(MAKE) clean
 
 ### BUILD_TARGETS ##############################################################
