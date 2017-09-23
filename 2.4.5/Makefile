@@ -2,8 +2,6 @@
 
 ELASTICSEARCH_VERSION	?= 2.4.5
 
-DOCKER_IMAGE_TAGS	?= 2.4 2
-
 ### BUILD ######################################################################
 
 VARIANT_DIR		?= $(CURDIR)

@@ -2,7 +2,7 @@
 
 ELASTICSEARCH_VERSION	?= 5.6.1
 
-DOCKER_IMAGE_TAGS	?= 5.6 5 latest
+DOCKER_IMAGE_TAGS	?= latest
 
 ### MK_DOCKER_IMAGE ############################################################
 
