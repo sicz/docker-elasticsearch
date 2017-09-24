@@ -1,0 +1,3 @@
+xpack.security.enabled: false
+xpack.watcher.enabled: false
+xpack.ml.enabled: false

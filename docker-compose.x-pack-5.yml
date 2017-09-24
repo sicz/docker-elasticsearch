@@ -13,6 +13,7 @@ services:
       - JAVA_KEYSTORE_PWD_FILE=/usr/share/elasticsearch/config/keystore.pwd
       - SERVER_CRT_HOST=${SERVER_CRT_HOST}
       - SIMPLE_CA_URL=https://simple-ca.local
+      - XPACK_EDITION=platinum
       - xpack.security.authc.accept_default_password=true
       - xpack.security.http.ssl.enabled=true
     volumes:

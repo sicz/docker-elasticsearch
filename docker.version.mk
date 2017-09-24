@@ -17,7 +17,8 @@ DOCKER_IMAGE_TAG	?= $(ELASTICSEARCH_TAG)
 ### BUILD ######################################################################
 
 # Docker image build variables
-BUILD_VARS		+= ELASTICSEARCH_VERSION
+BUILD_VARS		+= ELASTICSEARCH_VERSION \
+			   ELASTICSEARCH_TAG
 
 ### EXECUTOR ###################################################################
 

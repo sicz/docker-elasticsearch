@@ -13,6 +13,7 @@ services:
       - JAVA_KEYSTORE_PWD_FILE=/usr/share/elasticsearch/config/keystore.pwd
       - SERVER_CRT_HOST=${SERVER_CRT_HOST}
       - SIMPLE_CA_URL=https://simple-ca.local
+      - XPACK_EDITION=platinum
       # TODO: Must be the same as default password in Elasticsearch 5.x
       - XPACK_BOOTSTRAP_PASSWORD=changeme
       - xpack.security.http.ssl.enabled=true

@@ -176,26 +176,25 @@ describe "Docker image", :test => :docker_image do
         [
           "/docker-entrypoint.d/31-es2x-environment.sh",
           644, "root", "root", [:be_file, :eq_sha256sum],
-          "#{ENV["ELASTICSEARCH_VERSION"]}/rootfs",
+          "#{ENV["ELASTICSEARCH_TAG"]}/rootfs",
         ],
         [
           "/docker-entrypoint.d/71-es2x-settings.sh",
           644, "root", "root", [:be_file, :eq_sha256sum],
-          "#{ENV["ELASTICSEARCH_VERSION"]}/rootfs",
+          "#{ENV["ELASTICSEARCH_TAG"]}/rootfs",
         ],
         [
           "/usr/share/elasticsearch/config/logging.docker.yml",
           640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
-          "#{ENV["ELASTICSEARCH_VERSION"]}/rootfs",
+          "#{ENV["ELASTICSEARCH_TAG"]}/rootfs",
         ],
         [
           "/usr/share/elasticsearch/config/logging.yml",
           640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
-          "#{ENV["ELASTICSEARCH_VERSION"]}/rootfs",
-          nil,
+          nil, nil,
           Digest::SHA256.hexdigest(
             "# logging.docker.yml\n" +
-            IO.binread("#{ENV["ELASTICSEARCH_VERSION"]}/rootfs/usr/share/elasticsearch/config/logging.docker.yml")
+            IO.binread("#{ENV["ELASTICSEARCH_TAG"]}/rootfs/usr/share/elasticsearch/config/logging.docker.yml")
           ),
         ],
       ]
@@ -261,7 +260,22 @@ describe "Docker image", :test => :docker_image do
         "x-pack/rootfs",
       ],
       [
-        "/usr/share/elasticsearch/config/elasticsearch.default_tls_settings.yml",
+        "/usr/share/elasticsearch/config/x-pack.basic.yml",
+        640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+        "#{ENV["ELASTICSEARCH_TAG"]}/x-pack/rootfs"
+      ],
+      [
+        "/usr/share/elasticsearch/config/x-pack.gold.yml",
+        640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+        "#{ENV["ELASTICSEARCH_TAG"]}/x-pack/rootfs"
+      ],
+      [
+        "/usr/share/elasticsearch/config/x-pack.platinum.yml",
+        640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+        "#{ENV["ELASTICSEARCH_TAG"]}/x-pack/rootfs"
+      ],
+      [
+        "/usr/share/elasticsearch/config/x-pack.default_tls_settings.yml",
         640, "elasticsearch", "elasticsearch", [:be_file],
         "x-pack/rootfs",
       ],

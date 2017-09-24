@@ -27,7 +27,7 @@ RUN set -exo pipefail; \
   rm -f config/elasticsearch.keystore; \
   mv config/x-pack/log4j2.properties config/x-pack/log4j2.default.properties
 
-ENV \
-  XPACK_EDITION=basic
+ARG ELASTICSEARCH_TAG
 
 COPY x-pack/rootfs /
+COPY ${ELASTICSEARCH_TAG}/x-pack/rootfs /
