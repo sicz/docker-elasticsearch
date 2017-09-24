@@ -126,7 +126,15 @@ describe "Docker image", :test => :docker_image do
         644, "root", "root", [:be_file, :eq_sha256sum],
       ],
       [
+        "/docker-entrypoint.d/60-elasticsearch-fragments.sh",
+        644, "root", "root", [:be_file, :eq_sha256sum],
+      ],
+      [
         "/docker-entrypoint.d/70-elasticsearch-settings.sh",
+        644, "root", "root", [:be_file, :eq_sha256sum],
+      ],
+      [
+        "/docker-entrypoint.d/80-elasticsearch-options.sh",
         644, "root", "root", [:be_file, :eq_sha256sum],
       ],
       [
@@ -140,6 +148,10 @@ describe "Docker image", :test => :docker_image do
       [
         "/usr/share/elasticsearch/config",
         750, "elasticsearch", "elasticsearch", [:be_directory],
+      ],
+      [
+        "/usr/share/elasticsearch/config/elasticsearch.docker.yml",
+        640, "elasticsearch", "elasticsearch", [:be_file],
       ],
       [
         "/usr/share/elasticsearch/config/elasticsearch.yml",
@@ -162,17 +174,17 @@ describe "Docker image", :test => :docker_image do
     if "#{ENV["ELASTICSEARCH_VERSION"]}".start_with?("2.") then
       files += [
         [
-          "/docker-entrypoint.d/31-elasticsearch-environment.sh",
+          "/docker-entrypoint.d/31-es2x-environment.sh",
           644, "root", "root", [:be_file, :eq_sha256sum],
           "#{ENV["ELASTICSEARCH_VERSION"]}/rootfs",
         ],
         [
-          "/docker-entrypoint.d/61-logging-settings.sh",
+          "/docker-entrypoint.d/71-es2x-settings.sh",
           644, "root", "root", [:be_file, :eq_sha256sum],
           "#{ENV["ELASTICSEARCH_VERSION"]}/rootfs",
         ],
         [
-          "/usr/share/elasticsearch/config/logging.default.yml",
+          "/usr/share/elasticsearch/config/logging.docker.yml",
           640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
           "#{ENV["ELASTICSEARCH_VERSION"]}/rootfs",
         ],
@@ -182,15 +194,15 @@ describe "Docker image", :test => :docker_image do
           "#{ENV["ELASTICSEARCH_VERSION"]}/rootfs",
           nil,
           Digest::SHA256.hexdigest(
-            "# logging.default.yml\n" +
-            IO.binread("#{ENV["ELASTICSEARCH_VERSION"]}/rootfs/usr/share/elasticsearch/config/logging.default.yml")
+            "# logging.docker.yml\n" +
+            IO.binread("#{ENV["ELASTICSEARCH_VERSION"]}/rootfs/usr/share/elasticsearch/config/logging.docker.yml")
           ),
         ],
       ]
     else
       files += [
         [
-          "/usr/share/elasticsearch/config/log4j2.default.properties",
+          "/usr/share/elasticsearch/config/log4j2.docker.properties",
           640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
         ],
         [
@@ -198,8 +210,8 @@ describe "Docker image", :test => :docker_image do
           640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
           nil, nil,
           Digest::SHA256.hexdigest(
-            "# log4j2.default.properties\n" +
-            IO.binread("rootfs/usr/share/elasticsearch/config/log4j2.default.properties")
+            "# log4j2.docker.properties\n" +
+            IO.binread("rootfs/usr/share/elasticsearch/config/log4j2.docker.properties")
           ),
         ],
         [
@@ -239,7 +251,12 @@ describe "Docker image", :test => :docker_image do
         "x-pack/rootfs",
       ],
       [
-        "/docker-entrypoint.d/62-x-pack-settings.sh",
+        "/docker-entrypoint.d/62-x-pack-fragments.sh",
+        644, "root", "root", [:be_file, :eq_sha256sum],
+        "x-pack/rootfs",
+      ],
+      [
+        "/docker-entrypoint.d/72-x-pack-settings.sh",
         644, "root", "root", [:be_file, :eq_sha256sum],
         "x-pack/rootfs",
       ],
@@ -249,7 +266,10 @@ describe "Docker image", :test => :docker_image do
         "x-pack/rootfs",
       ],
       [
-        "/usr/share/elasticsearch/config/x-pack/log4j2.default.properties",
+        "/usr/share/elasticsearch/config/elasticsearch.keystore",
+        640, "elasticsearch", "elasticsearch", [:be_file],
+      ],[
+        "/usr/share/elasticsearch/config/x-pack/log4j2.docker.properties",
         640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
         "x-pack/rootfs",
       ],
@@ -258,8 +278,8 @@ describe "Docker image", :test => :docker_image do
         640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
         nil, nil,
         Digest::SHA256.hexdigest(
-          "# log4j2.default.properties\n" +
-          IO.binread("x-pack/rootfs/usr/share/elasticsearch/config/x-pack/log4j2.default.properties")
+          "# log4j2.docker.properties\n" +
+          IO.binread("x-pack/rootfs/usr/share/elasticsearch/config/x-pack/log4j2.docker.properties")
         ),
       ],
       [

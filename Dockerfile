@@ -52,8 +52,9 @@ RUN set -exo pipefail; \
   rm -f bin/*.bat bin/*.exe; \
   mkdir -p ${ES_PATH_CONF} ${ES_PATH_DATA} ${ES_PATH_LOGS}; \
   chown -R root:root .; \
-  rm -f config/elasticsearch.yml config/log4j2.properties; \
-  mv config/jvm.options ${ES_PATH_CONF}/jvm.default.options
+  mv config/elasticsearch.yml config/elasticsearch.default.yml; \
+  mv config/log4j2.properties config/log4j2.default.properties; \
+  mv config/jvm.options config/jvm.default.options
 
 COPY rootfs /
 

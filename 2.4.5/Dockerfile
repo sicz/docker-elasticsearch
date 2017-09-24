@@ -51,7 +51,8 @@ RUN set -exo pipefail; \
   rm -f /tmp/${ELASTICSEARCH_TARBALL}; \
   mkdir -p ${ES_PATH_CONF} ${ES_PATH_DATA} ${ES_PATH_LOGS} plugins; \
   chown -R root:root .; \
-  rm -f config/elasticsearch.yml config/logging.yml
+  mv config/elasticsearch.yml config/elasticsearch.default.yml; \
+  mv config/logging.yml config/logging.default.yml
 
 COPY rootfs /
 COPY ${ELASTICSEARCH_VERSION}/rootfs /

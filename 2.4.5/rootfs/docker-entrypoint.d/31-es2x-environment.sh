@@ -10,11 +10,11 @@ unset LOG4J2_PROPERTIES_FILES
 ### LOGGING_YML ################################################################
 
 # Default Log4j properties file name
-: ${LOGGING_YML_FILES=logging.default.yml}
+: ${LOGGING_YML_FILES:=logging.docker.yml}
 
 ### JVM_OPTIONS ################################################################
 
 # Default Java options
-unset ES_JVM_OPTIONS_FILES
+unset JVM_OPTIONS_FILES
 
 ################################################################################

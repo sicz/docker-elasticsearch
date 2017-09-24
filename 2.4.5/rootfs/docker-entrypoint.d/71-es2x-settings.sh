@@ -1,10 +1,5 @@
 #!/bin/bash -e
 
-### ES_PATH ####################################################################
-
-# Create missing directories
-mkdir -p ${ES_PATH_CONF}
-
 ### LOGGING_YML ################################################################
 
 if [ ! -e ${ES_PATH_CONF}/logging.yml ]; then

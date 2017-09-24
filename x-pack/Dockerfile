@@ -24,6 +24,10 @@ RUN set -exo pipefail; \
   rm -f bin/x-pack/*.bat bin/x-pack/*.exe; \
   rm -rf plugins/x-pack/platform/darwin-x86_64; \
   rm -rf plugins/x-pack/platform/windows-x86_64; \
-  rm -f config/elasticsearch.keystore config/x-pack/log4j2.properties
+  rm -f config/elasticsearch.keystore
+  mv config/x-pack/log4j2.properties config/x-pack/log4j2.default.properties
+
+ENV \
+  XPACK_EDITION=basic
 
 COPY x-pack/rootfs /
