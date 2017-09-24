@@ -17,6 +17,6 @@ if [ ! -e ${ES_PATH_CONF}/elasticsearch.docker.yml ]; then
   fi
 fi
 
-ELASTICSEARCH_YML_FILES="${ES_PATH_CONF}/elasticsearch.docker.yml ${ELASTICSEARCH_YML_FILES}"
+ELASTICSEARCH_YML_FILES="elasticsearch.docker.yml ${ELASTICSEARCH_YML_FILES}"
 
 ################################################################################

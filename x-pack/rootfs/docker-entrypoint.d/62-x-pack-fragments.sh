@@ -22,7 +22,7 @@ if [ ! -e ${ES_PATH_CONF}/x-pack.default_tls_settings.yml ]; then
   fi
 fi
 
-ELASTICSEARCH_YML_FILES="${ELASTICSEARCH_YML_FILES} xpack.${XPACK_EDITION}.yml x-pack.default_tls_settings.yml"
+ELASTICSEARCH_YML_FILES="${ELASTICSEARCH_YML_FILES} x-pack.${XPACK_EDITION}.yml x-pack.default_tls_settings.yml"
 
 ### XPACK_KEYSTORE #############################################################
 
