@@ -171,7 +171,7 @@ describe "Docker image", :test => :docker_image do
       ],
     ]
 
-    if "#{ENV["ELASTICSEARCH_VERSION"]}".start_with?("2.") then
+    if ENV["ELASTICSEARCH_VERSION"].start_with?("2.") then
       files += [
         [
           "/docker-entrypoint.d/31-es2x-environment.sh",
@@ -224,12 +224,78 @@ describe "Docker image", :test => :docker_image do
       ]
     end
 
+    if ENV["ELASTICSEARCH_VERSION"].end_with?("-xpack") then
+      files += [
+        [
+          "/docker-entrypoint.d/32-x-pack-environment.sh",
+          644, "root", "root", [:be_file, :eq_sha256sum],
+          "x-pack/rootfs",
+        ],
+        [
+          "/docker-entrypoint.d/62-x-pack-fragments.sh",
+          644, "root", "root", [:be_file, :eq_sha256sum],
+          "x-pack/rootfs",
+        ],
+        [
+          "/docker-entrypoint.d/72-x-pack-settings.sh",
+          644, "root", "root", [:be_file, :eq_sha256sum],
+          "x-pack/rootfs",
+        ],
+        [
+          "/usr/share/elasticsearch/config/x-pack.disable.yml",
+          640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+          "#{ENV["ELASTICSEARCH_TAG"]}/x-pack/rootfs"
+        ],
+        [
+          "/usr/share/elasticsearch/config/x-pack.basic.yml",
+          640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+          "#{ENV["ELASTICSEARCH_TAG"]}/x-pack/rootfs"
+        ],
+        [
+          "/usr/share/elasticsearch/config/x-pack.gold.yml",
+          640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+          "#{ENV["ELASTICSEARCH_TAG"]}/x-pack/rootfs"
+        ],
+        [
+          "/usr/share/elasticsearch/config/x-pack.platinum.yml",
+          640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+          "#{ENV["ELASTICSEARCH_TAG"]}/x-pack/rootfs"
+        ],
+        [
+          "/usr/share/elasticsearch/config/x-pack.default_tls_settings.yml",
+          640, "elasticsearch", "elasticsearch", [:be_file],
+          "x-pack/rootfs",
+        ],
+        [
+          "/usr/share/elasticsearch/config/elasticsearch.keystore",
+          640, "elasticsearch", "elasticsearch", [:be_file],
+        ],[
+          "/usr/share/elasticsearch/config/x-pack/log4j2.docker.properties",
+          640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+          "x-pack/rootfs",
+        ],
+        [
+          "/usr/share/elasticsearch/config/x-pack/log4j2.properties",
+          640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
+          nil, nil,
+          Digest::SHA256.hexdigest(
+            "# log4j2.docker.properties\n" +
+            IO.binread("x-pack/rootfs/usr/share/elasticsearch/config/x-pack/log4j2.docker.properties")
+          ),
+        ],
+        [
+          "/usr/share/elasticsearch/plugins/x-pack/x-pack-#{ENV["ELASTICSEARCH_VERSION"]}.jar",
+          644, "root", "root", [:be_file],
+        ],
+      ]
+    end
+
     files.each do |file, mode, user, group, expectations, rootfs, srcfile, sha256sum|
       expectations ||= []
       rootfs = "rootfs" if rootfs.nil?
       srcfile = file if srcfile.nil?
       sha256sum = Digest::SHA256.file("#{rootfs}/#{srcfile}").to_s if expectations.include?(:eq_sha256sum) && sha256sum.nil?
-      context file(file) do
+      context file(file), :xpack => "#{ENV["ELASTICSEARCH_VERSION"]}".end_with?("-xpack")  do
         it { is_expected.to exist }
         it { is_expected.to be_file }       if expectations.include?(:be_file)
         it { is_expected.to be_directory }  if expectations.include?(:be_directory)
@@ -240,81 +306,6 @@ describe "Docker image", :test => :docker_image do
       end
     end
 
-    ### XPACK ##################################################################
-
-    [
-      # [file, mode, user, group, [expectations], rootfs, srcfile, sha256sum]
-      [
-        "/docker-entrypoint.d/32-x-pack-environment.sh",
-        644, "root", "root", [:be_file, :eq_sha256sum],
-        "x-pack/rootfs",
-      ],
-      [
-        "/docker-entrypoint.d/62-x-pack-fragments.sh",
-        644, "root", "root", [:be_file, :eq_sha256sum],
-        "x-pack/rootfs",
-      ],
-      [
-        "/docker-entrypoint.d/72-x-pack-settings.sh",
-        644, "root", "root", [:be_file, :eq_sha256sum],
-        "x-pack/rootfs",
-      ],
-      [
-        "/usr/share/elasticsearch/config/x-pack.basic.yml",
-        640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
-        "#{ENV["ELASTICSEARCH_TAG"]}/x-pack/rootfs"
-      ],
-      [
-        "/usr/share/elasticsearch/config/x-pack.gold.yml",
-        640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
-        "#{ENV["ELASTICSEARCH_TAG"]}/x-pack/rootfs"
-      ],
-      [
-        "/usr/share/elasticsearch/config/x-pack.platinum.yml",
-        640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
-        "#{ENV["ELASTICSEARCH_TAG"]}/x-pack/rootfs"
-      ],
-      [
-        "/usr/share/elasticsearch/config/x-pack.default_tls_settings.yml",
-        640, "elasticsearch", "elasticsearch", [:be_file],
-        "x-pack/rootfs",
-      ],
-      [
-        "/usr/share/elasticsearch/config/elasticsearch.keystore",
-        640, "elasticsearch", "elasticsearch", [:be_file],
-      ],[
-        "/usr/share/elasticsearch/config/x-pack/log4j2.docker.properties",
-        640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
-        "x-pack/rootfs",
-      ],
-      [
-        "/usr/share/elasticsearch/config/x-pack/log4j2.properties",
-        640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
-        nil, nil,
-        Digest::SHA256.hexdigest(
-          "# log4j2.docker.properties\n" +
-          IO.binread("x-pack/rootfs/usr/share/elasticsearch/config/x-pack/log4j2.docker.properties")
-        ),
-      ],
-      [
-        "/usr/share/elasticsearch/plugins/x-pack/x-pack-#{ENV["ELASTICSEARCH_VERSION"]}.jar",
-        644, "root", "root", [:be_file],
-      ],
-    ].each do |file, mode, user, group, expectations, rootfs, srcfile, sha256sum|
-      expectations ||= []
-      rootfs = "rootfs" if rootfs.nil?
-      srcfile = file if srcfile.nil?
-      sha256sum = Digest::SHA256.file("#{rootfs}/#{srcfile}").to_s if expectations.include?(:eq_sha256sum) && sha256sum.nil?
-      context file(file), :x_pack => true do
-        it { is_expected.to exist }
-        it { is_expected.to be_file }       if expectations.include?(:be_file)
-        it { is_expected.to be_directory }  if expectations.include?(:be_directory)
-        it { is_expected.to be_mode(mode) } unless mode.nil?
-        it { is_expected.to be_owned_by(user) } unless user.nil?
-        it { is_expected.to be_grouped_into(group) } unless group.nil?
-        its(:sha256sum) { is_expected.to eq(sha256sum) } if expectations.include?(:eq_sha256sum)
-      end
-    end
   end
 
   ##############################################################################
