@@ -50,7 +50,6 @@ RUN set -exo pipefail; \
   tar xz --strip-components=1 -f /tmp/${ELASTICSEARCH_TARBALL}; \
   rm -f /tmp/${ELASTICSEARCH_TARBALL}; \
   rm -f bin/*.bat bin/*.exe; \
-  mkdir -p ${ES_PATH_CONF} ${ES_PATH_DATA} ${ES_PATH_LOGS}; \
   chown -R root:root .; \
   mv config/elasticsearch.yml config/elasticsearch.default.yml; \
   mv config/log4j2.properties config/log4j2.default.properties; \

@@ -49,7 +49,7 @@ RUN set -exo pipefail; \
   [ "${TARBALL_SHA1}" = "${EXPECTED_SHA1}" ]; \
   tar xz --strip-components=1 -f /tmp/${ELASTICSEARCH_TARBALL}; \
   rm -f /tmp/${ELASTICSEARCH_TARBALL}; \
-  mkdir -p ${ES_PATH_CONF} ${ES_PATH_DATA} ${ES_PATH_LOGS} plugins; \
+  mkdir -p plugins; \
   chown -R root:root .; \
   mv config/elasticsearch.yml config/elasticsearch.default.yml; \
   mv config/logging.yml config/logging.default.yml
