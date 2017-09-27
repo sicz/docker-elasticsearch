@@ -109,11 +109,9 @@ describe "Docker image", :test => :docker_image do
     end
   end
 
-  ### FILES ####################################################################
+  ### ELASTICSEARCH_FILES ######################################################
 
   describe "Files" do
-
-    ### ELASTICSEARCH_FILES ####################################################
 
     files = [
       # [file, mode, user, group, [expectations], rootfs, srcfile, sha256sum]
@@ -239,8 +237,11 @@ describe "Docker image", :test => :docker_image do
         its(:sha256sum) { is_expected.to eq(sha256sum) } if expectations.include?(:eq_sha256sum)
       end
     end
+  end
 
-    ### XPACK_FILES ############################################################
+  ### XPACK_FILES ##############################################################
+
+  describe "X-Pack Files", :x_pack => true do
 
     [
       # [file, mode, user, group, [expectations], rootfs, srcfile, sha256sum]
@@ -310,7 +311,7 @@ describe "Docker image", :test => :docker_image do
       rootfs = "rootfs" if rootfs.nil?
       srcfile = file if srcfile.nil?
       sha256sum = Digest::SHA256.file("#{rootfs}/#{srcfile}").to_s if expectations.include?(:eq_sha256sum) && sha256sum.nil?
-      context file(file), :x_pack => true do
+      context file(file) do
         it { is_expected.to exist }
         it { is_expected.to be_file }       if expectations.include?(:be_file)
         it { is_expected.to be_directory }  if expectations.include?(:be_directory)
