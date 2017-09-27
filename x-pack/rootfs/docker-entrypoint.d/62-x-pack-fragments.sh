@@ -2,8 +2,8 @@
 
 ### ELASTICSEARCH_YML ##########################################################
 
-if [ ! -e ${ES_PATH_CONF}/x-pack.default_tls_settings.yml ]; then
-  info "Creating ${ES_PATH_CONF}/x-pack.default_tls_settings.yml"
+if [ ! -e ${ES_PATH_CONF}/elasticsearch.x-pack.default-tls-settings.yml ]; then
+  info "Creating ${ES_PATH_CONF}/elasticsearch.x-pack.default-tls-settings.yml"
   (
     echo "xpack.ssl.supported_protocols: TLSv1.2"
     if [ -n "${JAVA_TRUSTSTORE_FILE}" -a -e "${JAVA_TRUSTSTORE_FILE}" ]; then
@@ -16,13 +16,13 @@ if [ ! -e ${ES_PATH_CONF}/x-pack.default_tls_settings.yml ]; then
       # TODO: Elasticsearch 6.0.0-beta2 crashes with keystore passwords in Elasticsearch keystore
       echo "xpack.ssl.keystore.password: ${JAVA_KEYSTORE_PWD}"
     fi
-  ) > ${ES_PATH_CONF}/x-pack.default_tls_settings.yml
+  ) > ${ES_PATH_CONF}/elasticsearch.x-pack.default-tls-settings.yml
   if [ -n "${DOCKER_ENTRYPOINT_DEBUG}" ]; then
-    cat ${ES_PATH_CONF}/x-pack.default_tls_settings.yml
+    cat ${ES_PATH_CONF}/elasticsearch.x-pack.default-tls-settings.yml
   fi
 fi
 
-ELASTICSEARCH_YML_FILES="${ELASTICSEARCH_YML_FILES} x-pack.${XPACK_EDITION}.yml x-pack.default_tls_settings.yml"
+ELASTICSEARCH_YML_FILES="${ELASTICSEARCH_YML_FILES} elasticsearch.x-pack.${XPACK_EDITION}.yml elasticsearch.x-pack.default-tls-settings.yml"
 
 ### XPACK_KEYSTORE #############################################################
 
