@@ -242,7 +242,7 @@ describe "Docker image", :test => :docker_image do
           "x-pack/rootfs",
         ],
         [
-          "/usr/share/elasticsearch/config/x-pack.disable.yml",
+          "/usr/share/elasticsearch/config/x-pack.disabled.yml",
           640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
           "#{ENV["ELASTICSEARCH_TAG"]}/x-pack/rootfs"
         ],
