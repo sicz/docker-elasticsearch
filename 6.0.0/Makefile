@@ -1,7 +1,7 @@
 ### DOCKER_IMAGE ###############################################################
 
 ELASTICSEARCH_VERSION	?= 6.0.0-rc1
-ELASTICSEARCH_TAG	?= $(subst -rc1,,$(ELASTICSEARCH_VERSION))
+ELASTICSEARCH_TAG	?= 6.0.0
 
 ### TEST #######################################################################
 
