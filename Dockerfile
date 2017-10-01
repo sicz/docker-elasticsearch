@@ -44,9 +44,9 @@ WORKDIR ${ES_HOME}
 RUN set -exo pipefail; \
   adduser --uid 1000 --user-group --home-dir ${ES_HOME} ${DOCKER_USER}; \
   curl -fLo /tmp/${ELASTICSEARCH_TARBALL} ${ELASTICSEARCH_TARBALL_URL}; \
-  EXPECTED_SHA1=$(curl -fL ${ELASTICSEARCH_TARBALL_SHA1_URL}); \
-  TARBALL_SHA1=$(sha1sum /tmp/${ELASTICSEARCH_TARBALL} | cut -d ' ' -f 1); \
-  [ "${TARBALL_SHA1}" = "${EXPECTED_SHA1}" ]; \
+  # EXPECTED_SHA1=$(curl -fL ${ELASTICSEARCH_TARBALL_SHA1_URL}); \
+  # TARBALL_SHA1=$(sha1sum /tmp/${ELASTICSEARCH_TARBALL} | cut -d " " -f 1); \
+  # [ "${TARBALL_SHA1}" = "${EXPECTED_SHA1}" ]; \
   tar xz --strip-components=1 -f /tmp/${ELASTICSEARCH_TARBALL}; \
   rm -f /tmp/${ELASTICSEARCH_TARBALL}; \
   rm -f bin/*.bat bin/*.exe; \
