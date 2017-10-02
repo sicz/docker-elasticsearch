@@ -6,7 +6,6 @@ BASE_IMAGE_TAG		?= $(ELASTICSEARCH_TAG)
 ### DOCKER_IMAGE ###############################################################
 
 DOCKER_IMAGE_TAG	?= $(BASE_IMAGE_TAG)-x-pack
-DOCKER_IMAGE_TAGS	?= x-pack
 
 ### BUILD ######################################################################
 
