@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-### XPACK_ELASTICSEARCH_YML ####################################################
+### XPACK_EDITION ##############################################################
 
 # Default X-Pack edition - free Basic license
 : ${XPACK_EDITION:=basic}
