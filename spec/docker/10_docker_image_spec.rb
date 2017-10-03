@@ -241,7 +241,7 @@ describe "Docker image", :test => :docker_image do
 
   ### XPACK_FILES ##############################################################
 
-  describe "X-Pack Files", :x_pack => true do
+  describe "X-Pack Files", :test => :docker_image, :x_pack => true do
 
     [
       # [file, mode, user, group, [expectations], rootfs, srcfile, sha256sum]
