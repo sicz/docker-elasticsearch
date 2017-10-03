@@ -14,6 +14,8 @@ describe "Docker container", :test => :docker_container do
     it { is_expected.to be_running }
   end
 
+  ### PROCESSES ################################################################
+
   describe "Processes" do
     [
       # [process,                   user,             group,            pid]
@@ -44,10 +46,10 @@ describe "Docker container", :test => :docker_container do
     end
   end
 
-  ### URLS #####################################################################
+  ### ELASTICSEARCH ############################################################
 
   describe "Elasticsearch endpoint" do
-    # Execute Serverspec command locally
+    # Execute Serverspec commands locally
     before(:each)  { set :backend, :exec }
     [
       # [url, stdout, stderr, user, passwd]

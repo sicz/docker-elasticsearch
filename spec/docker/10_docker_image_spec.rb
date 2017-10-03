@@ -114,7 +114,12 @@ describe "Docker image", :test => :docker_image do
   describe "Files" do
 
     files = [
-      # [file, mode, user, group, [expectations], rootfs, srcfile, sha256sum]
+      # [
+      #   file,
+      #   mode, user, group, [expectations],
+      #   rootfs, srcfile,
+      #   sha256sum,
+      # ]
       [
         "/docker-entrypoint.sh",
         755, "root", "root", [:be_file],

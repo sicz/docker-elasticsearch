@@ -35,6 +35,7 @@ export ES_JAVA_OPTS="-Des.cgroups.hierarchy.override=/ $ES_JAVA_OPTS"
 chown -R ${DOCKER_USER}:${DOCKER_GROUP} ${ES_PATH_CONF} ${ES_PATH_DATA} ${ES_PATH_LOGS}
 chmod -R u=rwX,g=rX,o-rwx ${ES_PATH_CONF} ${ES_PATH_DATA} ${ES_PATH_LOGS}
 
+# Export Elasticsearch settings directory
 export ES_PATH_CONF
 
 ################################################################################

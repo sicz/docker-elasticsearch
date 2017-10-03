@@ -6,7 +6,7 @@ if [ ! -e ${ES_PATH_CONF}/elasticsearch.yml ]; then
   info "Creating ${ES_PATH_CONF}/elasticsearch.yml"
   (
     for ELASTICSEARCH_YML_FILE in ${ELASTICSEARCH_YML_FILES}; do
-      echo "# ${ES_PATH_CONF}/${ELASTICSEARCH_YML_FILE}"
+      echo "# ${ELASTICSEARCH_YML_FILE}"
       cat ${ES_PATH_CONF}/${ELASTICSEARCH_YML_FILE}
     done
   ) > ${ES_PATH_CONF}/elasticsearch.yml
