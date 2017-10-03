@@ -19,10 +19,12 @@ LABEL \
   org.label-schema.vcs-ref="${VCS_REF}" \
   org.label-schema.build-date="${BUILD_DATE}"
 
+ARG CHECKSUM="sha512"
+
 ARG ELASTICSEARCH_VERSION
 ARG ELASTICSEARCH_TARBALL="elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz"
 ARG ELASTICSEARCH_TARBALL_URL="https://artifacts.elastic.co/downloads/elasticsearch/${ELASTICSEARCH_TARBALL}"
-ARG ELASTICSEARCH_TARBALL_SHA1_URL="${ELASTICSEARCH_TARBALL_URL}.sha1"
+ARG ELASTICSEARCH_TARBALL_CHECKSUM_URL="${ELASTICSEARCH_TARBALL_URL}.${CHECKSUM}"
 ARG ES_HOME="/usr/share/elasticsearch"
 ARG ES_PATH_CONF="${ES_HOME}/config"
 ARG ES_PATH_DATA="${ES_HOME}/data"
@@ -44,9 +46,9 @@ WORKDIR ${ES_HOME}
 RUN set -exo pipefail; \
   adduser --uid 1000 --user-group --home-dir ${ES_HOME} ${DOCKER_USER}; \
   curl -fLo /tmp/${ELASTICSEARCH_TARBALL} ${ELASTICSEARCH_TARBALL_URL}; \
-  # EXPECTED_SHA1=$(curl -fL ${ELASTICSEARCH_TARBALL_SHA1_URL}); \
-  # TARBALL_SHA1=$(sha1sum /tmp/${ELASTICSEARCH_TARBALL} | cut -d " " -f 1); \
-  # [ "${TARBALL_SHA1}" = "${EXPECTED_SHA1}" ]; \
+  EXPECTED_CHECKSUM=$(curl -fL ${ELASTICSEARCH_TARBALL_CHECKSUM_URL}); \
+  TARBALL_CHECKSUM=$(${CHECKSUM}sum /tmp/${ELASTICSEARCH_TARBALL} | cut -d " " -f 1); \
+  [ "${TARBALL_CHECKSUM}" = "${EXPECTED_CHECKSUM}" ]; \
   tar xz --strip-components=1 -f /tmp/${ELASTICSEARCH_TARBALL}; \
   rm -f /tmp/${ELASTICSEARCH_TARBALL}; \
   rm -f bin/*.bat bin/*.exe; \
