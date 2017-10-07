@@ -33,9 +33,8 @@ git clone https://github.com/sicz/docker-elasticsearch
 ### Usage
 
 The project contains Docker image version directories:
-* `2.4.1` - Elasticsearch 2.4.1
-* `5.5.2` - Elasticsearch 5.5.2
-* `6.0.0` - Elasticsearch 6.0.0
+* `x.y.z` - Elasticsearch
+* `x.y.z/x-pack` - Elasticsearch with X-Pack plugin
 
 Use the command `make` in the project directory:
 ```bash
@@ -79,8 +78,8 @@ make docker-pull-testimage # Pull the test image from the Docker Registry
 make docker-push        # Push the project image into the Docker Registry
 ```
 
-`elasticsearch` container with the default configuration listens on TCP port
-9200.
+`elasticsearch` container with the default configuration listens on TCP ports
+9200 and 9300.
 
 ## Deployment
 

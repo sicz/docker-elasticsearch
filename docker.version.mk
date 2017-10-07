@@ -42,23 +42,19 @@ ELASTICSEARCH_URL	?= http://elasticsearch.local:9200
 DOCKER_IMAGE_DEPENDENCIES += $(SIMPLE_CA_IMAGE)
 
 # Simple CA image
-SIMPLE_CA_NAME		?= simple-ca
-SIMPLE_CA_IMAGE_NAME	?= $(DOCKER_PROJECT)/$(SIMPLE_CA_NAME)
+SIMPLE_CA_IMAGE_NAME	?= $(DOCKER_PROJECT)/simple-ca
 SIMPLE_CA_IMAGE_TAG	?= latest
 SIMPLE_CA_IMAGE		?= $(SIMPLE_CA_IMAGE_NAME):$(SIMPLE_CA_IMAGE_TAG)
-
-# Simple CA service name in Docker Compose file
-SIMPLE_CA_SERVICE_NAME	?= $(shell echo $(SIMPLE_CA_NAME) | sed -E -e "s/[^[:alnum:]_]+/_/g")
 
 ### MAKE_VARS ##################################################################
 
 # Display the make variables
 MAKE_VARS		?= GITHUB_MAKE_VARS \
+			   CONFIG_MAKE_VARS \
 			   BASE_IMAGE_MAKE_VARS \
 			   DOCKER_IMAGE_MAKE_VARS \
 			   BUILD_MAKE_VARS \
 			   EXECUTOR_MAKE_VARS \
-			   CONFIG_MAKE_VARS \
 			   SHELL_MAKE_VARS \
 			   DOCKER_REGISTRY_MAKE_VARS
 

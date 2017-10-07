@@ -8,7 +8,7 @@
 # Path to data and log directories
 : ${ES_PATH_DATA:=${ES_HOME}/data}
 : ${ES_PATH_LOGS:=${ES_HOME}/logs}
-# Swarm service in replicated mode might use one volume for multiple nodes
+# Docker Stack service in replicated mode might use one volume for multiple nodes
 if [ -n "${DOCKER_HOST_NAME}" ]; then
   ES_PATH_DATA=${ES_PATH_DATA}/${DOCKER_CONTAINER_NAME}
   ES_PATH_LOGS=${ES_PATH_LOGS}/${DOCKER_CONTAINER_NAME}
@@ -34,10 +34,10 @@ fi
 # When Elasticsearch container is started as Docker Stack service it uses
 # service loadbalancer IP address for http.publish_host on all cluster nodes
 # which prevents to form a cluster.
-DOCKER_NODE_IP=$(hostname -i || echo "0.0.0.0")
-: ${ES_HTTP_PUBLISH_HOST:=${DOCKER_NODE_IP}}
+ES_NODE_IP=$(hostname -i || echo "0.0.0.0")
+: ${ES_HTTP_PUBLISH_HOST:=${ES_NODE_IP}}
 : ${ES_HTTP_BIND_HOST:=0.0.0.0}
-: ${ES_TRANSPORT_HOST:=${DOCKER_NODE_IP}}
+: ${ES_TRANSPORT_HOST:=${ES_NODE_IP}}
 
 ### LOG4J2_PROPERTIES ##########################################################
 
@@ -49,9 +49,9 @@ DOCKER_NODE_IP=$(hostname -i || echo "0.0.0.0")
 # Default Java options
 : ${JVM_OPTIONS_FILES:=jvm.default.options}
 
-### JAVA_KEYSTORE ##############################################################
+### SERVER_CERTS ###############################################################
 
-# Default truststore and keystore directories
+# Default certificate and key directories
 SERVER_CRT_DIR=${ES_PATH_CONF}
 SERVER_KEY_DIR=${ES_PATH_CONF}
 

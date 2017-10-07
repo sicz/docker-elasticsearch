@@ -1,5 +1,5 @@
 ###
-### Default configuration
+### Elasticsearch
 ###
 
 version: "3.3"
@@ -13,6 +13,7 @@ services:
     environment:
       - DOCKER_ENTRYPOINT_DEBUG=true
       - DOCKER_ENTRYPOINT_INFO=true
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - discovery.type=single-node
     networks:
       default:
@@ -31,7 +32,6 @@ services:
     environment:
       - DOCKER_ENTRYPOINT_DEBUG=true
       - DOCKER_ENTRYPOINT_INFO=true
-      # Wait until the tested container is started
       - WAIT_FOR_TCP=elasticsearch.local:9200
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -46,7 +46,6 @@ services:
     environment:
       - DOCKER_ENTRYPOINT_DEBUG=true
       - DOCKER_ENTRYPOINT_INFO=true
-      # Wait until the tested container is started
       - WAIT_FOR_TCP=elasticsearch.local:9200
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro

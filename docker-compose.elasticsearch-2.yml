@@ -1,5 +1,5 @@
 ###
-### Elastic 2.x configuration
+### Elasticsearch 2.x
 ###
 
 version: "3.3"

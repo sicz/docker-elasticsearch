@@ -1,5 +1,5 @@
 ###
-### Elastic 5.x with X-Pack configuration
+### Elasticsearch 5.x with X-Pack
 ###
 
 version: "3.3"

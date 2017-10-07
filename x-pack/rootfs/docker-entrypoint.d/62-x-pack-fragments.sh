@@ -2,8 +2,8 @@
 
 ### ELASTICSEARCH_YML ##########################################################
 
-if [ ! -e ${ES_PATH_CONF}/elasticsearch.x-pack.default-tls-settings.yml ]; then
-  info "Creating ${ES_PATH_CONF}/elasticsearch.x-pack.default-tls-settings.yml"
+if [ ! -e ${ES_PATH_CONF}/elasticsearch.x-pack.yml ]; then
+  info "Creating ${ES_PATH_CONF}/elasticsearch.x-pack.yml"
   (
     echo "xpack.ssl.supported_protocols: TLSv1.2"
     if [ -n "${JAVA_TRUSTSTORE_FILE}" -a -e "${JAVA_TRUSTSTORE_FILE}" ]; then
@@ -16,15 +16,12 @@ if [ ! -e ${ES_PATH_CONF}/elasticsearch.x-pack.default-tls-settings.yml ]; then
       # TODO: Elasticsearch 6.0.0-beta2 crashes with keystore password in Elasticsearch keystore
       echo "xpack.ssl.keystore.password: ${JAVA_KEYSTORE_PWD}"
     fi
-  ) > ${ES_PATH_CONF}/elasticsearch.x-pack.default-tls-settings.yml
-  if [ -n "${DOCKER_ENTRYPOINT_DEBUG}" ]; then
-    cat ${ES_PATH_CONF}/elasticsearch.x-pack.default-tls-settings.yml
-  fi
+  ) > ${ES_PATH_CONF}/elasticsearch.x-pack.yml
 fi
 
-ELASTICSEARCH_YML_FILES="${ELASTICSEARCH_YML_FILES} elasticsearch.x-pack.${XPACK_EDITION}.yml elasticsearch.x-pack.default-tls-settings.yml"
+ELASTICSEARCH_YML_FILES="${ELASTICSEARCH_YML_FILES} elasticsearch.x-pack.yml"
 
-### XPACK_KEYSTORE #############################################################
+### ELASTICSEARCH_KEYSTORE #####################################################
 
 if [ ! -e "${ES_PATH_CONF}/elasticsearch.keystore" ]; then
   info "Creating ${ES_PATH_CONF}/elasticsearch.keystore"
@@ -33,7 +30,7 @@ if [ ! -e "${ES_PATH_CONF}/elasticsearch.keystore" ]; then
     XPACK_SECRET="$(basename ${XPACK_SECRET_FILE} | sed -E "s/.secret$")"
     cat ${XPACK_SECRET_FILE} | elasticsearch-keystore add --stdin "${XPACK_SECRET}"
   done
-  # TODO: Elasticsearch 6.0.0-beta2 crashes with passwords in Elasticsearch keystore
+  # TODO: Elasticsearch 6.0.0-rc1 crashes with passwords in Elasticsearch keystore
   # if [ -n "${JAVA_TRUSTSTORE_PWD}" ]; then
   #   echo "${JAVA_TRUSTSTORE_PWD}" | elasticsearch-keystore add --stdin "xpack.ssl.truststore.password"
   # fi
@@ -42,9 +39,6 @@ if [ ! -e "${ES_PATH_CONF}/elasticsearch.keystore" ]; then
   # fi
   if [ -n "${XPACK_BOOTSTRAP_PASSWORD}" ]; then
     echo "${XPACK_BOOTSTRAP_PASSWORD}" | elasticsearch-keystore add --stdin "bootstrap.password"
-  fi
-  if [ -n "${DOCKER_ENTRYPOINT_DEBUG}" ]; then
-    elasticsearch-keystore list
   fi
 fi
 

@@ -22,13 +22,10 @@ LABEL \
 ARG CHECKSUM="sha512"
 
 ARG ELASTICSEARCH_VERSION
-ARG ELASTICSEARCH_TARBALL="elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz"
-ARG ELASTICSEARCH_TARBALL_URL="https://artifacts.elastic.co/downloads/elasticsearch/${ELASTICSEARCH_TARBALL}"
-ARG ELASTICSEARCH_TARBALL_CHECKSUM_URL="${ELASTICSEARCH_TARBALL_URL}.${CHECKSUM}"
+ARG ES_TARBALL="elasticsearch-${ELASTICSEARCH_VERSION}.tar.gz"
+ARG ES_TARBALL_URL="https://artifacts.elastic.co/downloads/elasticsearch/${ES_TARBALL}"
+ARG ES_TARBALL_CHECKSUM_URL="${ES_TARBALL_URL}.${CHECKSUM}"
 ARG ES_HOME="/usr/share/elasticsearch"
-ARG ES_PATH_CONF="${ES_HOME}/config"
-ARG ES_PATH_DATA="${ES_HOME}/data"
-ARG ES_PATH_LOGS="${ES_HOME}/logs"
 
 ENV \
   DOCKER_USER="elasticsearch" \
@@ -36,21 +33,18 @@ ENV \
   ELASTIC_CONTAINER="true" \
   ELASTICSEARCH_VERSION="${ELASTICSEARCH_VERSION}" \
   ES_HOME="${ES_HOME}" \
-  ES_PATH_CONF="${ES_PATH_CONF}" \
-  ES_PATH_DATA="${ES_PATH_DATA}" \
-  ES_PATH_LOGS="${ES_PATH_LOGS}" \
   PATH="${ES_HOME}/bin:${PATH}"
 
 WORKDIR ${ES_HOME}
 
 RUN set -exo pipefail; \
   adduser --uid 1000 --user-group --home-dir ${ES_HOME} ${DOCKER_USER}; \
-  curl -fLo /tmp/${ELASTICSEARCH_TARBALL} ${ELASTICSEARCH_TARBALL_URL}; \
-  EXPECTED_CHECKSUM=$(curl -fL ${ELASTICSEARCH_TARBALL_CHECKSUM_URL}); \
-  TARBALL_CHECKSUM=$(${CHECKSUM}sum /tmp/${ELASTICSEARCH_TARBALL} | cut -d " " -f 1); \
+  curl -fLo /tmp/${ES_TARBALL} ${ES_TARBALL_URL}; \
+  EXPECTED_CHECKSUM=$(curl -fL ${ES_TARBALL_CHECKSUM_URL}); \
+  TARBALL_CHECKSUM=$(${CHECKSUM}sum /tmp/${ES_TARBALL} | cut -d " " -f 1); \
   [ "${TARBALL_CHECKSUM}" = "${EXPECTED_CHECKSUM}" ]; \
-  tar xz --strip-components=1 -f /tmp/${ELASTICSEARCH_TARBALL}; \
-  rm -f /tmp/${ELASTICSEARCH_TARBALL}; \
+  tar xz --strip-components=1 -f /tmp/${ES_TARBALL}; \
+  rm -f /tmp/${ES_TARBALL}; \
   rm -f bin/*.bat bin/*.exe; \
   chown -R root:root .; \
   mv config/elasticsearch.yml config/elasticsearch.default.yml; \

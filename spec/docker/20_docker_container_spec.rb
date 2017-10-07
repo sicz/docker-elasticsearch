@@ -53,12 +53,14 @@ describe "Docker container", :test => :docker_container do
     before(:each)  { set :backend, :exec }
     [
       # [url, stdout, stderr, user, passwd]
-      [ "#{ENV["ELASTICSEARCH_URL"]}",
+      [
+        "#{ENV["ELASTICSEARCH_URL"]}",
         "\"number\" : \"#{ENV["ELASTICSEARCH_VERSION"]}\"",
         "^< Content-Type: application\\/json; charset=UTF-8\\r$",
         "elastic", "changeme",
       ],
-      [ "#{ENV["ELASTICSEARCH_URL"]}/_cluster/health",
+      [
+        "#{ENV["ELASTICSEARCH_URL"]}/_cluster/health",
         "\"status\":\"(green|yellow)\"",
         "^< Content-Type: application\\/json; charset=UTF-8\\r$",
         "elastic", "changeme",

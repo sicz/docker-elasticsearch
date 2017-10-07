@@ -13,11 +13,11 @@ SHELL			+= -e
 ### DOCKER_VERSIONS ############################################################
 
 # Docker image versions
-DOCKER_VERSIONS		?= 2.4.5 \
-			   5.6.2 \
-			   5.6.2/x-pack \
-			   6.0.0 \
-			   6.0.0/x-pack \
+DOCKER_VERSIONS		?= $(shell \
+				find . -type d | \
+				sed -E "s|^\./||" | \
+				egrep "^\d+\.\d+\.\d+(/x-pack)?$$" \
+			   )
 
 # Make targets propagated to all Docker image versions
 DOCKER_VERSION_TARGETS	+= build \
