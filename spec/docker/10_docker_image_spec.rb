@@ -219,6 +219,8 @@ describe "Docker image", :test => :docker_image do
         [
           "/usr/share/elasticsearch/config/jvm.options",
           640, "elasticsearch", "elasticsearch", [:be_file],
+          nil, nil,
+          "^# jvm.default.options$"
         ],
       ]
     end

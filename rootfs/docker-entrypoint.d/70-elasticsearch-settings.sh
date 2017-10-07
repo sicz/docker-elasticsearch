@@ -21,7 +21,7 @@ if [ ! -e ${ES_PATH_CONF}/jvm.options ]; then
   info "Creating ${ES_PATH_CONF}/jvm.options"
   (
     for JVM_OPTIONS_FILE in ${JVM_OPTIONS_FILES}; do
-      echo "# ${ES_PATH_CONF}/${JVM_OPTIONS_FILE}"
+      echo "# ${JVM_OPTIONS_FILE}"
       cat ${ES_PATH_CONF}/${JVM_OPTIONS_FILE}
     done
   ) > ${ES_PATH_CONF}/jvm.options
