@@ -17,7 +17,7 @@ fi
 # Create missing directories
 mkdir -p ${ES_PATH_CONF} ${ES_PATH_DATA} ${ES_PATH_LOGS}
 
-# Populate Elasticsearch settings directory
+# Populate settings directory
 if [ "$(readlink -f ${ES_HOME}/config)" != "$(readlink -f ${ES_PATH_CONF})" ]; then
   cp -rp ${ES_HOME}/config/* ${ES_PATH_CONF}
 fi
