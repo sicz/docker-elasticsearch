@@ -78,7 +78,7 @@ make docker-pull-testimage # Pull the test image from the Docker Registry
 make docker-push        # Push the project image into the Docker Registry
 ```
 
-`elasticsearch` container with the default configuration listens on TCP ports
+`elasticsearch` container with default configuration listens on TCP ports
 9200 and 9300.
 
 ## Deployment
