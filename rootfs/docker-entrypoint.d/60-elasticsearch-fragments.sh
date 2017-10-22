@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-### ELASTICSEARCH_YML ##########################################################
+### ELASTICSEARCH_DOCKER_YML ###################################################
 
 if [ ! -e ${ES_PATH_CONF}/elasticsearch.docker.yml ]; then
   info "Creating ${ES_PATH_CONF}/elasticsearch.docker.yml"
@@ -12,9 +12,6 @@ if [ ! -e ${ES_PATH_CONF}/elasticsearch.docker.yml ]; then
     echo "path.data: ${ES_PATH_DATA}"
     echo "path.logs: ${ES_PATH_LOGS}"
   ) > ${ES_PATH_CONF}/elasticsearch.docker.yml
-  if [ -n "${DOCKER_ENTRYPOINT_DEBUG}" ]; then
-    cat ${ES_PATH_CONF}/elasticsearch.docker.yml
-  fi
 fi
 
 ELASTICSEARCH_YML_FILES="elasticsearch.docker.yml ${ELASTICSEARCH_YML_FILES}"
