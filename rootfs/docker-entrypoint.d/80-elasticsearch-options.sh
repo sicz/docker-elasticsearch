@@ -9,7 +9,7 @@ if [ -n "${DOCKER_CONTAINER_START}" ]; then
       ES_OPTS+=("-E${KEY}=${VAL}")
     fi
   done < <(env | egrep "^[a-z_]+\.[a-z_]+" | sort)
-  set -- $@ ${ES_OPTS[@]}
+  set -- "$@" ${ES_OPTS[@]}
   unset ES_OPTS
 fi
 

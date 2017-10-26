@@ -345,7 +345,6 @@ describe "Docker image", :test => :docker_image do
         end if expectations.include?(:eq_sha256sum)
       end
     end
-
   end
 
   ##############################################################################
