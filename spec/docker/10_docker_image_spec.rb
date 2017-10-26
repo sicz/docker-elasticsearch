@@ -125,7 +125,7 @@ describe "Docker image", :test => :docker_image do
         755, "root", "root", [:be_file],
       ],
       [
-        "/docker-entrypoint.d/30-elasticsearch-environment.sh",
+        "/docker-entrypoint.d/31-elasticsearch-environment.sh",
         644, "root", "root", [:be_file, :eq_sha256sum],
       ],
       [
