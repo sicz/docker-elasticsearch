@@ -9,6 +9,13 @@
 
 ELASTICSEARCH_YML_FILES="${ELASTICSEARCH_YML_FILES} elasticsearch.x-pack.${XPACK_EDITION}.yml"
 
+### XPACK_BOOTSTRAP_PASSWORD ###################################################
+
+: ${XPACK_BOOTSTRAP_PASSWORD_FILE:=/run/secrets/xpack_bootstrap.pwd}
+if [ -n "${XPACK_BOOTSTRAP_PASSWORD_FILE}" -a -e "${XPACK_BOOTSTRAP_PASSWORD_FILE}" ]; then
+  XPACK_BOOTSTRAP_PASSWORD="$(cat ${XPACK_BOOTSTRAP_PASSWORD_FILE})"
+fi
+
 ### XPACK_LOG4J2_PROPERTIES ####################################################
 
 # Default X-Pack Log4j2 properties file name
