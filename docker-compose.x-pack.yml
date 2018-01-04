@@ -14,7 +14,7 @@ services:
       - SERVER_CRT_HOST=${SERVER_CRT_HOST}
       - SIMPLE_CA_URL=https://simple-ca.local
       - XPACK_EDITION=platinum
-      - XPACK_BOOTSTRAP_PASSWORD=changeme
+      - XPACK_BOOTSTRAP_PASSWORD=P@ssw0rd.
       - xpack.security.http.ssl.enabled=true
     volumes:
       - simple_ca_secrets:/run/secrets:ro

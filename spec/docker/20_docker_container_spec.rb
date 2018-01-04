@@ -57,13 +57,13 @@ describe "Docker container", :test => :docker_container do
         "#{ENV["ELASTICSEARCH_URL"]}",
         "\"number\" : \"#{ENV["ELASTICSEARCH_VERSION"]}\"",
         "^< Content-Type: application\\/json; charset=UTF-8\\r$",
-        "elastic", "changeme",
+        "elastic", "P@ssw0rd.",
       ],
       [
         "#{ENV["ELASTICSEARCH_URL"]}/_cluster/health",
         "\"status\":\"(green|yellow)\"",
         "^< Content-Type: application\\/json; charset=UTF-8\\r$",
-        "elastic", "changeme",
+        "elastic", "P@ssw0rd.",
       ],
     ].each do |url, stdout, stderr, user, passwd|
       context url do

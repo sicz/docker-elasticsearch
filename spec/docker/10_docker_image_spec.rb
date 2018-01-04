@@ -274,17 +274,17 @@ describe "Docker image", :test => :docker_image do
       [
         "/usr/share/elasticsearch/config/elasticsearch.x-pack.basic.yml",
         640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
-        "#{ENV["ELASTICSEARCH_TAG"]}/x-pack/rootfs"
+        "x-pack/rootfs"
       ],
       [
         "/usr/share/elasticsearch/config/elasticsearch.x-pack.gold.yml",
         640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
-        "#{ENV["ELASTICSEARCH_TAG"]}/x-pack/rootfs"
+        "x-pack/rootfs"
       ],
       [
         "/usr/share/elasticsearch/config/elasticsearch.x-pack.platinum.yml",
         640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
-        "#{ENV["ELASTICSEARCH_TAG"]}/x-pack/rootfs"
+        "x-pack/rootfs"
       ],
       [
         "/usr/share/elasticsearch/config/elasticsearch.x-pack.yml",
