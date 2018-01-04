@@ -1,7 +1,7 @@
 ### BASE_IMAGE #################################################################
 
 BASE_IMAGE_NAME		?= $(DOCKER_PROJECT)/openjdk
-BASE_IMAGE_TAG		?= 8u144-jre-centos
+BASE_IMAGE_TAG		?= 8u151-jre-centos
 
 ### DOCKER_IMAGE ###############################################################
 
