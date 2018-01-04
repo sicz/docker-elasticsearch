@@ -17,6 +17,13 @@ jobs:
       - setup_remote_docker:
           version: 17.06.0-ce
       - run:
+          name: Pull Docker images
+          command: |
+            make docker-pull-baseimage
+            make docker-pull-image || true
+            make docker-pull-dependencies
+            make docker-pull-testimage
+      - run:
           name: sicz/elasticsearch:2.4.6
           working_directory: 2.4.6
           command: |

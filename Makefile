@@ -13,11 +13,9 @@ SHELL			+= -e
 ### DOCKER_VERSIONS ############################################################
 
 # Docker image versions
-DOCKER_VERSIONS		?= $(shell \
-				find . -type d | \
-				sed -E "s|^\./||" | \
-				egrep "^\d+\.\d+\.\d+(/x-pack)?$$" \
-			   )
+DOCKER_VERSIONS		?= 2.4.6 \
+			   6.1.1 \
+			   6.1.1/x-pack
 
 # Make targets propagated to all Docker image versions
 DOCKER_VERSION_TARGETS	+= build \
@@ -42,6 +40,14 @@ $(DOCKER_VERSION_TARGETS):
 	@for DOCKER_VERSION in $(DOCKER_VERSIONS); do \
 		cd $(CURDIR)/$${DOCKER_VERSION}; \
 		$(MAKE) display-version-header $@; \
+	done
+# Do docker-pull-baseimage only on pure Elasticsearch
+docker-pull-baseimage:
+	@for DOCKER_VERSION in $(DOCKER_VERSIONS); do \
+		if [[ $${DOCKER_VERSION} =~ ^[0-9]+(\.[0-9]+)*$$ ]]; then \
+			cd $(CURDIR)/$${DOCKER_VERSION}; \
+			$(MAKE) display-version-header $@; \
+		fi; \
 	done
 
 ################################################################################
