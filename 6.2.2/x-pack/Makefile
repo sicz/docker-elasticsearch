@@ -21,7 +21,7 @@ ELASTICSEARCH_URL	?= https://elasticsearch.local:9200
 ### TEST #######################################################################
 
 # Do all tests
-SPEC_OPTS		?=
+SPEC_OPTS		?= --tag ~searchguard
 
 ### MK_DOCKER_IMAGE ############################################################
 

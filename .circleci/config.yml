@@ -29,15 +29,25 @@ jobs:
           command: |
             make ci
       - run:
-          name: sicz/elasticsearch:6.1.2
-          working_directory: 6.1.2
+          name: sicz/elasticsearch:6.2.2
+          working_directory: 6.2.2
           command: |
             make ci
       - run:
-          name: sicz/elasticsearch:6.1.2-x-pack
-          working_directory: 6.1.2/x-pack
+          name: sicz/elasticsearch:6.2.2-x-pack
+          working_directory: 6.2.2/x-pack
           command: |
             make ci
+      # - run:
+      #     name: sicz/elasticsearch:6.2.2-searchguard
+      #     working_directory: 6.2.2/searchguard
+      #     command: |
+      #       make ci
+      # - run:
+      #     name: sicz/elasticsearch:6.2.2-searchguard-admin
+      #     working_directory: 6.2.2/searchguard-admin
+      #     command: |
+      #       make ci
       - deploy:
           name: Push images to the Docker Hub
           command: |

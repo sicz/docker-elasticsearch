@@ -1,11 +1,11 @@
 ### DOCKER_IMAGE ###############################################################
 
-ELASTICSEARCH_VERSION	?= 6.1.2
+ELASTICSEARCH_VERSION	?= 6.2.2
 
 ### TEST #######################################################################
 
 # Skip Elasticsearch X-Pack tests
-SPEC_OPTS		?= --tag ~x_pack
+SPEC_OPTS		?= --tag ~x_pack --tag ~searchguard
 
 ### MK_DOCKER_IMAGE ############################################################
 
