@@ -316,8 +316,8 @@ describe "Docker image", :test => :docker_image do
         "^# log4j2.docker.properties$"
       ],
       [
-        "/usr/share/elasticsearch/plugins/x-pack/x-pack-#{ENV["ELASTICSEARCH_VERSION"]}.jar",
-        644, "root", "root", [:be_file],
+        "/usr/share/elasticsearch/plugins/x-pack/x-pack-core",
+        755, "root", "root", [:be_directory],
       ],
     ].each do |file, mode, user, group, expectations, rootfs, srcfile, match|
       expectations ||= []
