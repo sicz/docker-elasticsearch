@@ -13,6 +13,7 @@ ELASTICSEARCH_YML_FILES="${ELASTICSEARCH_YML_FILES} elasticsearch.x-pack.${XPACK
 
 : ${XPACK_BOOTSTRAP_PASSWORD_FILE:=/run/secrets/xpack_bootstrap.pwd}
 if [ -n "${XPACK_BOOTSTRAP_PASSWORD_FILE}" -a -e "${XPACK_BOOTSTRAP_PASSWORD_FILE}" ]; then
+  info "Using Elasticsearch bootstrap password from file ${XPACK_BOOTSTRAP_PASSWORD_FILE}"
   XPACK_BOOTSTRAP_PASSWORD="$(cat ${XPACK_BOOTSTRAP_PASSWORD_FILE})"
 fi
 
@@ -22,3 +23,6 @@ fi
 : ${XPACK_LOG4J2_PROPERTIES_FILES:=log4j2.docker.properties}
 
 ################################################################################
+
+info
+env | sort

@@ -19,6 +19,7 @@ mkdir -p ${ES_PATH_CONF} ${ES_PATH_DATA} ${ES_PATH_LOGS}
 
 # Populate settings directory
 if [ "$(readlink -f ${ES_HOME}/config)" != "$(readlink -f ${ES_PATH_CONF})" ]; then
+  info "Populating ${ES_PATH_CONF} config directory"
   cp -rp ${ES_HOME}/config/* ${ES_PATH_CONF}
 fi
 
@@ -31,6 +32,8 @@ else
   ES_NODE_NAME="${DOCKER_CONTAINER_NAME}"
 fi
 
+info "Using '${ES_NODE_NAME}' node name"
+
 # When Elasticsearch container is started as Docker Stack service it uses
 # service loadbalancer IP address for http.publish_host on all cluster nodes
 # which prevents to form a cluster.
@@ -38,6 +41,10 @@ ES_NODE_IP=$(hostname -i || echo "0.0.0.0")
 : ${ES_HTTP_PUBLISH_HOST:=${ES_NODE_IP}}
 : ${ES_HTTP_BIND_HOST:=0.0.0.0}
 : ${ES_TRANSPORT_HOST:=${ES_NODE_IP}}
+
+debug "ES_HTTP_PUBLISH_HOST=${ES_HTTP_PUBLISH_HOST}"
+debug "ES_HTTP_BIND_HOST=${ES_HTTP_BIND_HOST}"
+debug "ES_TRANSPORT_HOST=${ES_TRANSPORT_HOST}"
 
 ### LOG4J2_PROPERTIES ##########################################################
 
