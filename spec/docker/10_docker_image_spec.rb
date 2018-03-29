@@ -248,6 +248,8 @@ describe "Docker image", :test => :docker_image do
 
   ### XPACK_FILES ##############################################################
 
+  x_pack_edition = ENV["X_PACK_EDITION"] || "platinum"
+
   describe "X-Pack Files", :test => :docker_image, :x_pack => true do
     [
       # [
@@ -298,13 +300,14 @@ describe "Docker image", :test => :docker_image do
         [
           "^# elasticsearch.docker.yml$",
           "^# elasticsearch.x-pack.yml$",
-          "^# elasticsearch.x-pack.platinum.yml$",
+          "^# elasticsearch.x-pack.#{x_pack_edition}.yml$",
         ]
       ],
       [
         "/usr/share/elasticsearch/config/elasticsearch.keystore",
         640, "elasticsearch", "elasticsearch", [:be_file],
-      ],[
+      ],
+      [
         "/usr/share/elasticsearch/config/x-pack/log4j2.docker.properties",
         640, "elasticsearch", "elasticsearch", [:be_file, :eq_sha256sum],
         "x-pack/rootfs",
