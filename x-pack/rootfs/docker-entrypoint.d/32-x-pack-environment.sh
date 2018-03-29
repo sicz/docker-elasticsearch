@@ -23,6 +23,3 @@ fi
 : ${XPACK_LOG4J2_PROPERTIES_FILES:=log4j2.docker.properties}
 
 ################################################################################
-
-info
-env | sort
